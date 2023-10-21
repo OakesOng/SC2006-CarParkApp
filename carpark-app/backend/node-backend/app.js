@@ -2,6 +2,7 @@ const express = require("express");
 const LoginVerification = require("./classes/LoginVerification");
 const CreateAccount = require("./classes/CreateAccount");
 const PasswordManager = require("./classes/PasswordManager");
+const FavouriteManager = require("./classes/FavouriteManager");
 const config = require("./classes/UserDatabaseConfiguration"); // Correct path to the configuration file
 const ownerCredential = require("./classes/OwnerCredential");
 const cors = require("cors");
@@ -179,6 +180,122 @@ app.post("/ResetPassword", async(req, res) =>{
   }
 
 })
+
+app.post("/AddToFavourite", async (req, res) => {
+  try {
+    console.log(req.body);
+    const { userName, address, latitude, longitude } = req.body;
+    const favMan = new FavouriteManager(config);
+
+    // Wrap the asynchronous operation inside a Promise
+    const result = new Promise((resolve, reject) => {
+      favMan.addToFavourite(userName, address, latitude, longitude)
+        .then((result) => {
+          resolve(result);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+
+    // Wait for the Promise to resolve or reject
+    result
+      .then((data) => {
+        if (data) {
+          res.json({ status: "added to favourite" });
+        } else {
+          res.json({ status: "already in favourite" });
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        res.status(500).json({ message: "Internal server error" });
+      });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+
+app.post("/LoadFavouriteCarPark", async (req, res) => {
+  try {
+    console.log(req.body);
+    const userName = req.body.userName;
+    const favMan = new FavouriteManager(config);
+    const result = new Promise((resolve, reject) => {
+      favMan.findFavourite(userName)
+        .then((result) => {
+          resolve(result);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+
+    result
+    .then((data) => {
+      if (data) {
+        res.json({FavouriteList: data});
+      } else {
+        res.json({ status: "No Favourite" });
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    });
+
+
+
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+app.post("/FavouriteCarPark", async (req, res) => {
+  try {
+    console.log(req.body);
+    const {userName, address, action} = req.body;
+    const favMan = new FavouriteManager(config);
+    if (action === "Delete"){
+      favMan.deleteFavourite(userName,address)
+      res.json({status:"item deleted"});
+    }
+    if (action === "Navigate"){
+      
+      const result = new Promise((resolve, reject) => {
+        favMan.getCoordinates(userName,address)
+          .then((result) => {
+            resolve(result);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+  
+      result
+      .then((data) => {
+        if (data) {
+          res.json({coordinates:data});
+        } else {
+          res.json({ status: "error" });
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        res.status(500).json({ message: "Internal server error" });
+      });
+    }
+ 
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

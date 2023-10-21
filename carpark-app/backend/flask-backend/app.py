@@ -32,6 +32,9 @@ def get_data():
         print("checking for destination input...")
         if (carparkMan.isDestination(destinationLocation)):
             targetCoordinates = carparkMan.getCoordinatesFromLocation(destinationLocation) # use input destination as target for distance querying
+            if not (carparkMan.isLocal(targetCoordinates[0],targetCoordinates[1])):
+                response = {"status":"Destination Not in Local"}
+                return response
         else:
             targetCoordinates = (currentCoordinates['latitude'],currentCoordinates['longitude']) # use current position as distance querying
         print("filtering....")
