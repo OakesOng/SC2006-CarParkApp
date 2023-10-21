@@ -13,7 +13,10 @@ import ResetPassword from "./assets/components/ResetPassword";
 import ForgetPasswordLogin from "./assets/components/ForgetPasswordLogin";
 import Map from "./assets/components/Map";
 import ChooseCarPark from "./assets/components/ChooseCarPark";
+import FavouriteCarPark from "./assets/components/FavouriteCarPark";
 function App() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const userName = urlParams.get("username");
   const homeLinks = [
     { to: "/Login", label: "Login" },
     { to: "/About", label: "About" },
@@ -23,9 +26,15 @@ function App() {
     // Define navigation for other routes here
     { to: "/Login", label: "Logout" },
   ];
+  const searchCarParkLinks = [
+    { to: `/FavouriteCarpark?username=${userName}`, label: "Favourite" },
+    { to: "/Login", label: "Logout" },
+  ];
 
   const resetLink = [{ to: "/", label: "Home" }];
-  const mainApp = [{ to: "/SearchCarPark", label: "Back" }];
+  const mainApp = [
+    { to: `/SearchCarPark?username=${userName}`, label: "Back" },
+  ];
   const logoSrc = "../Logo.png";
 
   return (
@@ -92,8 +101,18 @@ function App() {
           path="/SearchCarpark"
           element={
             <>
-              <NavigationBar logo={logoSrc} links={otherLinks} />
+              <NavigationBar logo={logoSrc} links={searchCarParkLinks} />
               <SearchCarPark />
+            </>
+          }
+        />
+
+        <Route
+          path="/FavouriteCarpark"
+          element={
+            <>
+              <NavigationBar logo={logoSrc} links={otherLinks} />
+              <FavouriteCarPark />
             </>
           }
         />

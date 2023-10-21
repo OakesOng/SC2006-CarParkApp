@@ -37,7 +37,7 @@ const Form = () => {
       .then((data) => {
         console.log(data);
         if (data.status === "user login") {
-          window.location.href = "./SearchCarpark";
+          window.location.href = `./SearchCarpark?username=${userName}`;
         }
         if (data.status === "admin login") {
           window.location.href = "./Admin";
