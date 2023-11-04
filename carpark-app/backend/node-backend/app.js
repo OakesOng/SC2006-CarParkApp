@@ -326,6 +326,58 @@ app.post("/Report", async (req, res) => {
 });
 
 
+app.post("/LoadReport", async (req, res) => {
+  try {
+    const reportMan = new ReportManager(config);
+    const result = new Promise((resolve, reject) => {
+      reportMan.findReport()
+        .then((result) => {
+          resolve(result);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+
+    result
+    .then((data) => {
+      if (data) {
+        res.json({ReportList: data});
+      } else {
+        res.json({ status: "No Report" });
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    });
+
+
+
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+
+app.post("/ResolveReport", async (req, res) => {
+  try {
+    console.log(req.body);
+    const id = req.body.id;
+    const reportMan = new ReportManager(config);
+    console.log(id);
+    reportMan.resolveReport(id);
+    res.json({status:"item resolved"});
+
+
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Listening to port ${port}`);

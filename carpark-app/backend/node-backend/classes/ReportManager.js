@@ -72,6 +72,68 @@ class ReportManager {
       sql.close();
     }
   }
+
+  async findReport(){
+    const pool = new sql.ConnectionPool(this.userDatabaseConfiguration);
+    try{
+      await pool.connect();
+      const request = new sql.Request(pool);
+      const query = "SELECT reportid,details, problem FROM userreport";
+      const checkResult = await request.query(query);
+
+      if (checkResult.recordset.length>0){
+        const newArray = checkResult.recordset;
+        console.log(newArray);
+        return newArray;
+      }
+      else{
+        console.log("No results found");
+        return false;
+      }
+    }catch(err){
+      console.error('Error deleting data:', err);
+      throw err;
+    }
+    finally{
+      await pool.close();
+    }
+  }
+
+  async resolveReport(reportID){ 
+        
+    const pool = new sql.ConnectionPool(this.userDatabaseConfiguration); //change argument to this.userDatabaseConfiguration
+    
+    try{
+        await pool.connect();
+        const request = new sql.Request(pool);
+
+        const ResolveReportID = parseInt(reportID);
+        request.input('ResolveReportID', sql.Int, ResolveReportID);
+
+        const checkQuery = 'SELECT TOP 1 1 FROM userreport WHERE reportid = @ResolveReportID;';
+        const checkResult = await request.query(checkQuery);
+
+        if (checkResult.recordset.length>0){
+            const resolveQuery = `DELETE TOP (1) FROM userreport WHERE reportid = @ResolveReportID;`;
+
+            await request.query(resolveQuery);
+            console.log('Resolved from Reports!');
+            return true 
+        }
+        else{
+            console.log("Report does not exist, no deletion!")
+            return false
+        }        
+
+    }
+    catch(err){
+        console.error('Error deleting data:', err);
+        throw err;
+    }
+    finally{
+        await pool.close();
+    }
+}
 }
 
 module.exports = ReportManager;
