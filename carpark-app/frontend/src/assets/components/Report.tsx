@@ -29,6 +29,7 @@ const Report: React.FC = () => {
         if (response.status === "report has been created") {
           // Handle success, e.g., show a success message
           console.log("Report submitted successfully!");
+          setAlertVisible(false);
           setAlertMessage("Report submitted successfully!");
           setSuccess(true);
           // Clear the input fields by setting them back to their initial values

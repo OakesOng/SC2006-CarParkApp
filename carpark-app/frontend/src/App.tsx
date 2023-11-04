@@ -30,7 +30,7 @@ function App() {
   ];
   const searchCarParkLinks = [
     { to: `/FavouriteCarpark?username=${userName}`, label: "Favourite" },
-    { to: "/Report", label: "Report" },
+    { to: `/Report?username=${userName}`, label: "Report" },
     { to: "/Login", label: "Logout" },
   ];
 

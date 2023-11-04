@@ -55,7 +55,7 @@ const ChooseCarPark = () => {
         address
       )}&latitude=${latitude}&longitude=${longitude}&destLat=${
         destinationLocation[0]
-      }&destLon=${destinationLocation[1]}`;
+      }&destLon=${destinationLocation[1]}&username=${userName}`;
 
       // Navigate to the /Map page with the constructed URL
       window.location.href = mapURL;
