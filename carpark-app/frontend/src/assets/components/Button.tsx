@@ -4,6 +4,7 @@ interface Props {
   children: string;
   color?: string;
   style?: CSSProperties;
+  className?: string; // Allow className to be optional
   onClick?: () => void;
 }
 
