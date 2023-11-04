@@ -14,6 +14,7 @@ import ForgetPasswordLogin from "./assets/components/ForgetPasswordLogin";
 import Map from "./assets/components/Map";
 import ChooseCarPark from "./assets/components/ChooseCarPark";
 import FavouriteCarPark from "./assets/components/FavouriteCarPark";
+import Report from "./assets/components/Report";
 function App() {
   const urlParams = new URLSearchParams(window.location.search);
   const userName = urlParams.get("username");
@@ -25,9 +26,11 @@ function App() {
   const otherLinks = [
     // Define navigation for other routes here
     { to: "/Login", label: "Logout" },
+    { to: `/SearchCarPark?username=${userName}`, label: "Back" },
   ];
   const searchCarParkLinks = [
     { to: `/FavouriteCarpark?username=${userName}`, label: "Favourite" },
+    { to: "/Report", label: "Report" },
     { to: "/Login", label: "Logout" },
   ];
 
@@ -154,6 +157,16 @@ function App() {
             <>
               <NavigationBar logo={logoSrc} links={mainApp} />
               <ChooseCarPark />
+            </>
+          }
+        />
+
+        <Route
+          path="/Report"
+          element={
+            <>
+              <NavigationBar logo={logoSrc} links={otherLinks} />
+              <Report />
             </>
           }
         />
