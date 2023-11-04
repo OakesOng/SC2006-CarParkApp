@@ -6,6 +6,7 @@ const FavouriteManager = require("./classes/FavouriteManager");
 const config = require("./classes/UserDatabaseConfiguration"); // Correct path to the configuration file
 const ownerCredential = require("./classes/OwnerCredential");
 const cors = require("cors");
+const ReportManager = require("./classes/ReportManager");
 const app = express();
 const corsOptions = {
   origin: "http://localhost:5173", // Replace with your frontend's URL
@@ -295,6 +296,34 @@ app.post("/FavouriteCarPark", async (req, res) => {
   }
 });
 
+
+app.post("/Report", async (req, res) => {
+  console.log("Server route is being triggered");
+  try {
+    const { details, problem } = req.body;
+    console.log(req.body);
+    if (
+      req.body.details === '' ||
+      req.body.problem === '' 
+    ) {
+      return res.json({ status: "some fields are empty" });
+    }
+    const newReport = new ReportManager(config);
+    newReport.setDetails(details);
+    console.log(newReport.getDetails());
+    newReport.setProblem(problem);
+
+    // Add user to the database
+    newReport.makeReport();
+
+    return res.json({ status: "report has been created" });
+
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({message: "Internal server error" });
+    
+  }
+});
 
 
 const port = process.env.PORT || 3000;
