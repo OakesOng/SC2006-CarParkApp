@@ -85,7 +85,7 @@ const FavouriteCarPark = () => {
           const longitude = data.coordinates.longitude;
           const mapURL = `/Map?address=${encodeURIComponent(
             address
-          )}&latitude=${latitude}&longitude=${longitude}`;
+          )}&latitude=${latitude}&longitude=${longitude}&username=${userName}`;
           window.location.href = mapURL;
         }
       });
